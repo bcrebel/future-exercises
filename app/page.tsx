@@ -1,4 +1,6 @@
-import List, { Exercise } from '@/app/components/List'
+import { Exercise } from '@/app/types';
+import List from '@/app/components/List'
+import { SelectedExerciseProvider } from "@/app/context/SelectedExerciseContext";
 
 
 
@@ -20,10 +22,9 @@ export default async function Page() {
   return (
     <div className="flex sm:flex-col-reverse lg:flex-row h-full w-full">
     <div className="left-pane w-full sm:h-1/2 lg:h-full lg:w-1/3 2xl:w-1/4">
-
-
-        <List exercises={exercises} />
-
+      <SelectedExerciseProvider>
+          <List exercises={exercises} />
+      </SelectedExerciseProvider>
     </div>
     <div className="right-pane hidden sm:block sm:h-1/2 lg:h-full bg-slate-600 grow"></div>
   </div>
