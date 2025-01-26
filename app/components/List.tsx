@@ -2,8 +2,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Exercise } from "@/app/types";
 import { useSelectedExercise } from "@/app/context/SelectedExerciseContext";
+import { useRouter } from "next/navigation"; 
 
 export default function List({ exercises }: { exercises: Exercise[] }) {
+const router = useRouter();
   const { selectedExercise, setSelectedExercise } = useSelectedExercise();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,7 +67,6 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
     );
   };
 
-
   const filteredExercises = exercises.filter((exercise) => {
     const matchesSearchQuery = exercise.name
       .toLowerCase()
@@ -91,20 +92,27 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
   });
 
   useEffect(() => {
-    // Compare previous and current filteredExercises
     if (
-      previousFilteredExercises.current !== null &&
-      JSON.stringify(previousFilteredExercises.current) !== JSON.stringify(filteredExercises)
+      previousFilteredExercises.current === null ||
+      JSON.stringify(previousFilteredExercises.current) !== JSON.stringify(filteredExercises) 
     ) {
       if (filteredExercises.length > 0) {
-        setSelectedExercise(filteredExercises[0]);
+        setSelectedExercise(filteredExercises[0]); 
       } else {
         setSelectedExercise(null); 
       }
     }
-
-    previousFilteredExercises.current = filteredExercises;
+    previousFilteredExercises.current = filteredExercises; 
   }, [filteredExercises, setSelectedExercise]);
+
+  useEffect(() => {
+    if (selectedExercise) {
+      router.push(`?exerciseId=${selectedExercise.id}`);
+    } else {
+      router.push(""); // Clear the query parameter if no exercise is selected
+    }
+  }, [selectedExercise, router]);
+
 
   return (
     <>
@@ -118,14 +126,14 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
         <button onClick={toggleModal}>Filter</button>
       </div>
       <div className="overflow-y-auto h-[calc(100%-112px)] bg-gray-100 py-3 shadow-sm">
-        <div className="list flex flex-col gap-y-3 mx-auto items-center">
+        {filteredExercises.length > 0 ? (<div className="list flex flex-col gap-y-3 mx-auto items-center">
           {filteredExercises.map((exercise) => (
             <button
               className={`flex flex-col bg-white justify-start text-left p-3 shadow-sm rounded w-[90%] hover:outline ${
                 selectedExercise?.id === exercise.id ? "outline outline-blue-500" : "hover:outline-blue-200"
               }`}
               key={exercise.id}
-              onClick={() => setSelectedExercise(exercise)} // Manually update the selected exercise
+              onClick={() => setSelectedExercise(exercise)} 
             >
               <p className="text-l font-bold">{exercise.name}</p>
               <div className="flex gap-x-1 mt-2">
@@ -142,7 +150,11 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
               </div>
             </button>
           ))}
-        </div>
+        </div>) : (
+            <div className="text-center text-gray-500 py-10">
+                <p>No results found. Try adjusting your search or filters.</p>
+            </div>
+        )}
       </div>
       {/* Filter Modal */}
         {isModalOpen && (<div role="dialog">
