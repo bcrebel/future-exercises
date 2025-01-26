@@ -117,11 +117,11 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
           <button onClick={toggleModal}>Filter</button>
         </div>
         {/* Filtered Exercises */}
-        <div className="overflow-y-auto h-[calc(100%-130px)] shadow-sm">
+        <div className="overflow-y-auto h-[calc(100%-112px)] bg-gray-100 py-3 shadow-sm">
           <div className="list flex flex-col gap-y-3 mx-auto items-center">
             {filteredExercises.map((exercise) => (
               <button
-                className="flex flex-col justify-start text-left p-3 border rounded w-[90%]"
+                className="flex flex-col bg-white justify-start text-left p-3 shadow-sm rounded w-[90%] hover:outline hover:outline-blue-200"
                 key={exercise.id}
               >
                 <p className="text-l font-bold">{exercise.name}</p>
@@ -153,8 +153,8 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
                         Close
                     </button>
                     <h2 className="text-lg font-bold">Filter Options</h2>
-                    <h3 className="text-md font-semibold mt-4">Muscle Groups</h3>
-                    <div className="grid grid-cols-2 gap-4 mt-2">
+                    <h3 className="uppercase text-xs font-semibold mt-8">Muscle Groups</h3>
+                    <div className="grid grid-cols-2 gap-4 mt-4">
                     {muscleGroupOptions.map((group) => (
                         <div key={group}>
                         <label>
@@ -169,8 +169,8 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
                         </div>
                     ))}
                     </div>
-                    <h3 className="text-md font-semibold mt-4">Available Equipment</h3>
-                    <div className="grid grid-cols-2 gap-4 mt-2">
+                    <h3 className="uppercase text-xs font-semibold mt-8">Available Equipment</h3>
+                    <div className="grid grid-cols-2 gap-4 mt-4">
                         {equipmentOptions.map((equipment) => (
                             <div key={equipment}>
                             <label>
