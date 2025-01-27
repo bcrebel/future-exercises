@@ -5,10 +5,10 @@ import { useSelectedExercise } from '@/app/context/SelectedExerciseContext';
 import usePageResize from '../hooks/usePageResize';
 import { Exercise } from '../types';
 
-const MobilePreview = ({exercise}) => {
-    return <>
-        <video controls className="h-full m-auto" src={exercise.video.url} />
-    </>
+const MobilePreview = ({exercise}: {exercise: Exercise}) => {
+    return <div className="bg-black w-full h-full">
+        {exercise.video && <video controls className="h-full m-auto" src={exercise.video.url} />}
+    </div>
 }
  
 
