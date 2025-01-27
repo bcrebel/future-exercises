@@ -10,7 +10,7 @@ interface HomeProps {
 }
 
 async function fetchExercises() {
-  const res = await fetch(" https://candidate.staging.future.co/sandbox/api/exercises", { cache: "no-store" }); // cache: "no-store" ensures SSR
+  const res = await fetch(" https://candidate.staging.future.co/sandbox/api/exercises", { cache: "no-store" }); 
   if (!res.ok) {
     throw new Error("Failed to fetch exercises");
   }
@@ -26,7 +26,7 @@ export default async function Page() {
       <div className="left-pane w-full h-2/3 sm:h-1/2 lg:h-full lg:w-1/3 2xl:w-1/4">
             <List exercises={exercises} />
       </div>
-      <div className="right-pane h-1/3 sm:h-1/2 lg:h-full grow">
+      <div className="right-pane w-full h-1/3 sm:h-1/2 lg:h-full">
         <DetailView />
       </div>
     </SelectedExerciseProvider>

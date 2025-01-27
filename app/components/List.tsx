@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Exercise } from "@/app/types";
 import { useSelectedExercise } from "@/app/context/SelectedExerciseContext";
 import { useSearchParams, useRouter } from "next/navigation"; 
+import FilterIcon from '@/app/components/FilterIcon';
 
 export default function List({ exercises }: { exercises: Exercise[] }) {
 const router = useRouter();
@@ -138,7 +139,7 @@ const router = useRouter();
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <button onClick={toggleModal}>Filter</button>
+        <button onClick={toggleModal}><FilterIcon /></button>
       </div>
       <div className="overflow-y-auto h-[calc(100%-64px)] bg-gray-100 py-3 shadow-sm">
         {filteredExercises.length > 0 ? (<div className="list flex flex-col gap-y-3 mx-auto items-center">

@@ -4,11 +4,16 @@ import { useState, useEffect } from "react";
 import throttle from "lodash.throttle";
 
 function usePageResize(): boolean {
-  const [isMobile, setIsMobile] = useState<boolean>(() => window.innerWidth <= 1024);
-
+  const [isMobile, setIsMobile] = useState<boolean>(() => {
+    if (typeof window === 'undefined') {
+      return false; 
+    }
+    return window.innerWidth < 1024;
+  });
+  
   useEffect(() => {
     const handleResize = throttle(() => {
-      setIsMobile(window.innerWidth <= 1024);
+      setIsMobile(window.innerWidth < 1024);
     }, 200);
 
     window.addEventListener("resize", handleResize);
