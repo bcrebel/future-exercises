@@ -84,10 +84,7 @@ const router = useRouter();
       selectedEquipment.length === 0 ||
       exercise.equipment_required === null ||
       selectedEquipment.some((equipment) =>
-        exercise.equipment_required
-          ?.split(",")
-          .map((e) => e.trim())
-          .includes(equipment)
+        exercise.equipment_required?.includes(equipment)
       );
 
     return matchesSearchQuery && matchesMuscleGroups && matchesEquipment;
