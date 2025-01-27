@@ -33,8 +33,8 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen`}
       >
-        <div className="w-full h-screen fixed">
-          <nav className="w-full h-12 border-b-2 shadow-sm flex items-center p-4"><p className="text-l font-bold">Exercises</p></nav>
+        <div className="w-full h-screen overflow-y-hidden">
+          <nav className="w-full h-16 border-b-2 shadow-sm flex items-center p-4"><p className="text-l font-bold">Exercise Explorer</p></nav>
           {children}
         </div>
       </body>

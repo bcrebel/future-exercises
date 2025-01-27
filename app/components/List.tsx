@@ -140,7 +140,7 @@ const router = useRouter();
         />
         <button onClick={toggleModal}>Filter</button>
       </div>
-      <div className="overflow-y-auto h-[calc(100%-112px)] bg-gray-100 py-3 shadow-sm">
+      <div className="overflow-y-auto h-[calc(100%-64px)] bg-gray-100 py-3 shadow-sm">
         {filteredExercises.length > 0 ? (<div className="list flex flex-col gap-y-3 mx-auto items-center">
           {filteredExercises.map((exercise) => (
             <button
@@ -217,7 +217,7 @@ const router = useRouter();
                     </div>
                 </div>
             </div>
-        </div>)};
+        </div>)}
     </>
   );
 }

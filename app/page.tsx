@@ -21,7 +21,7 @@ export default async function Page() {
   const exercises = await fetchExercises();
 
   return (
-    <div className="flex flex-col-reverse lg:flex-row h-full w-full">
+    <div className="flex flex-col-reverse lg:flex-row h-[calc(100%-64px)] w-full">
       <SelectedExerciseProvider>
       <div className="left-pane w-full h-2/3 sm:h-1/2 lg:h-full lg:w-1/3 2xl:w-1/4">
             <List exercises={exercises} />

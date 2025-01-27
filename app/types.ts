@@ -5,7 +5,7 @@ export interface Exercise {
     muscle_groups?: string;
     equipment_required?: string;
     movement_patterns?: string;
-    synonyms?: string[];
+    synonyms?: string;
     side?: string;
     is_alternating?: boolean;
     video?: {
