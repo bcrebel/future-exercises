@@ -2,10 +2,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Exercise } from "@/app/types";
 import { useSelectedExercise } from "@/app/context/SelectedExerciseContext";
-import { useRouter } from "next/navigation"; 
+import { useSearchParams, useRouter } from "next/navigation"; 
 
 export default function List({ exercises }: { exercises: Exercise[] }) {
 const router = useRouter();
+  const searchParams = useSearchParams();
   const { selectedExercise, setSelectedExercise } = useSelectedExercise();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -92,27 +93,44 @@ const router = useRouter();
   });
 
   useEffect(() => {
-    if (
-      previousFilteredExercises.current === null ||
-      JSON.stringify(previousFilteredExercises.current) !== JSON.stringify(filteredExercises) 
-    ) {
-      if (filteredExercises.length > 0) {
-        setSelectedExercise(filteredExercises[0]); 
-      } else {
-        setSelectedExercise(null); 
-      }
+    console.log('first')
+    const exerciseId = searchParams.get("exerciseId");
+    const selectedFromUrl =
+      exerciseId &&
+      exercises.find((exercise) => exercise.id === exerciseId);
+
+      if (selectedFromUrl && selectedFromUrl !== selectedExercise) {
+      setSelectedExercise(selectedFromUrl);
+    } else if (!selectedFromUrl && filteredExercises.length > 0) {
+      setSelectedExercise(exercises[0]);
     }
-    previousFilteredExercises.current = filteredExercises; 
-  }, [filteredExercises, setSelectedExercise]);
+}, []);
 
   useEffect(() => {
-    if (selectedExercise) {
+    const currentId = searchParams.get("exerciseId");
+    if (selectedExercise && currentId !== String(selectedExercise.id)) {
       router.push(`?exerciseId=${selectedExercise.id}`);
-    } else {
-      router.push(""); // Clear the query parameter if no exercise is selected
     }
-  }, [selectedExercise, router]);
+  }, [selectedExercise, searchParams, router]);
 
+  useEffect(() => {
+    if(!previousFilteredExercises.current) {
+        previousFilteredExercises.current = filteredExercises;
+        return
+    }
+
+    if (
+        JSON.stringify(previousFilteredExercises.current) !== JSON.stringify(filteredExercises)
+    ) {
+      if (filteredExercises.length > 0) {
+        setSelectedExercise(filteredExercises[0]);
+      } else {
+        setSelectedExercise(null);
+      }
+    }
+
+    previousFilteredExercises.current = filteredExercises;
+  }, [filteredExercises]);
 
   return (
     <>
@@ -136,7 +154,7 @@ const router = useRouter();
               onClick={() => setSelectedExercise(exercise)} 
             >
               <p className="text-l font-bold">{exercise.name}</p>
-              <div className="flex gap-x-1 mt-2">
+              <div className="flex flex-wrap gap-x-1 mt-2">
                 {exercise.muscle_groups
                   ?.split(",")
                   .map((group, idx) => (
@@ -158,8 +176,8 @@ const router = useRouter();
       </div>
       {/* Filter Modal */}
         {isModalOpen && (<div role="dialog">
-            <div className="scrim top-0 fixed w-full h-full bg-black bg-opacity-50"/>
-            <div className="absolute top-0 bottom-0 flex items-end sm:justify-center sm:items-center w-full h-full">
+            <div className="scrim top-0 fixed w-full h-full bg-black bg-opacity-50 z-10"/>
+            <div className="absolute top-0 bottom-0 flex items-end sm:justify-center sm:items-center w-full h-full z-20">
                 <div className="overflow-scroll relative bg-white w-full h-[90%] sm:w-2/3 sm:h-3/4 lg:w-1/2 p-8 rounded-md shadow-lg ">
                     <button
                        onClick={toggleModal}
