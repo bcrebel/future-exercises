@@ -75,8 +75,9 @@ const router = useRouter();
 
     const matchesMuscleGroups =
       selectedMuscleGroups.length === 0 ||
-      selectedMuscleGroups.some((group) =>
-        exercise.muscle_groups?.split(",").map((g) => g.trim()).includes(group)
+      selectedMuscleGroups.every((group) => {
+        return exercise.muscle_groups?.includes(group)
+      }
       );
 
     const matchesEquipment =
@@ -93,7 +94,6 @@ const router = useRouter();
   });
 
   useEffect(() => {
-    console.log('first')
     const exerciseId = searchParams.get("exerciseId");
     const selectedFromUrl =
       exerciseId &&

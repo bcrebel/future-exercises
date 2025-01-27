@@ -7,7 +7,7 @@ import { Exercise } from '../types';
 
 const MobilePreview = ({exercise}) => {
     return <>
-        <video className="h-full m-auto" src={exercise.video.url} />
+        <video controls className="h-full m-auto" src={exercise.video.url} />
     </>
 }
  
