@@ -58,7 +58,7 @@ const DetailViewScreen = function ({
 
     fetchDifficulty();
 
-    return () => setDifficulty(null)
+    return () => setDifficulty(null);
   }, [exercise.id]);
 
   return (

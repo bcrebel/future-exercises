@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useVirtualizer, Virtualizer, VirtualItem } from "@tanstack/react-virtual";
+import {
+  useVirtualizer,
+  Virtualizer,
+  VirtualItem,
+} from "@tanstack/react-virtual";
 import { Exercise } from "@/app/types";
 import { useSelectedExercise } from "@/app/context/SelectedExerciseContext";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -15,7 +19,9 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<string[]>([]);
+  const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<string[]>(
+    [],
+  );
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
   const previousFilteredExercises = useRef<Exercise[] | null>(null);
 
@@ -60,7 +66,7 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
 
   const handleMuscleGroupChange = (group: string) => {
     setSelectedMuscleGroups((prev) =>
-      prev.includes(group) ? prev.filter((g) => g !== group) : [...prev, group]
+      prev.includes(group) ? prev.filter((g) => g !== group) : [...prev, group],
     );
   };
 
@@ -68,7 +74,7 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
     setSelectedEquipment((prev) =>
       prev.includes(equipment)
         ? prev.filter((e) => e !== equipment)
-        : [...prev, equipment]
+        : [...prev, equipment],
     );
   };
 
@@ -87,7 +93,7 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
       selectedEquipment.length === 0 ||
       exercise.equipment_required === null ||
       selectedEquipment.some((equipment) =>
-        exercise.equipment_required?.includes(equipment)
+        exercise.equipment_required?.includes(equipment),
       );
 
     return matchesSearchQuery && matchesMuscleGroups && matchesEquipment;
@@ -134,11 +140,12 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
 
   const parentRef = useRef<HTMLDivElement>(null);
 
-  const rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement> = useVirtualizer({
-    count: filteredExercises.length, 
-    getScrollElement: () => parentRef.current, 
-    estimateSize: () => 110, 
-  });
+  const rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement> =
+    useVirtualizer({
+      count: filteredExercises.length,
+      getScrollElement: () => parentRef.current,
+      estimateSize: () => 110,
+    });
 
   return (
     <>
@@ -160,7 +167,7 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
         {filteredExercises.length > 0 ? (
           <div
             style={{
-              height: `${rowVirtualizer.getTotalSize()}px`, 
+              height: `${rowVirtualizer.getTotalSize()}px`,
               position: "relative",
             }}
           >
@@ -170,8 +177,8 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
               return (
                 <div
                   key={exercise.id}
-                  ref={rowVirtualizer.measureElement}  
-                  data-index={virtualRow.index}              
+                  ref={rowVirtualizer.measureElement}
+                  data-index={virtualRow.index}
                   style={{
                     position: "absolute",
                     top: 0,
@@ -180,11 +187,13 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
                     width: "100%",
                   }}
                   className={`flex flex-col justify-start text-left p-3 shadow-sm border-t-[1px] hover:bg-gray-50 ${
-                    selectedExercise?.id === exercise.id ? 'bg-gray-100' : 'bg-white'
+                    selectedExercise?.id === exercise.id
+                      ? "bg-gray-100"
+                      : "bg-white"
                   }`}
                   onClick={() => setSelectedExercise(exercise)}
                 >
-                    <p className="text-l font-bold">{exercise.name}</p>
+                  <p className="text-l font-bold">{exercise.name}</p>
                   <div className="flex flex-wrap gap-x-1 mt-2">
                     {exercise.muscle_groups?.split(",").map((group, idx) => (
                       <p
@@ -195,8 +204,7 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
                       </p>
                     ))}
                   </div>
-                    </div>
-       
+                </div>
               );
             })}
           </div>
