@@ -1,19 +1,21 @@
-'use client';
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Exercise } from "@/app/types";
 import { useSelectedExercise } from "@/app/context/SelectedExerciseContext";
-import { useSearchParams, useRouter } from "next/navigation"; 
-import FilterIcon from '@/app/components/FilterIcon';
-import Modal from '@/app/components/Modal'
+import { useSearchParams, useRouter } from "next/navigation";
+import FilterIcon from "@/app/components/FilterIcon";
+import Modal from "@/app/components/Modal";
 
 export default function List({ exercises }: { exercises: Exercise[] }) {
-const router = useRouter();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { selectedExercise, setSelectedExercise } = useSelectedExercise();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<string[]>([]);
+  const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<string[]>(
+    [],
+  );
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
   const previousFilteredExercises = useRef<Exercise[] | null>(null);
 
@@ -58,7 +60,7 @@ const router = useRouter();
 
   const handleMuscleGroupChange = (group: string) => {
     setSelectedMuscleGroups((prev) =>
-      prev.includes(group) ? prev.filter((g) => g !== group) : [...prev, group]
+      prev.includes(group) ? prev.filter((g) => g !== group) : [...prev, group],
     );
   };
 
@@ -66,7 +68,7 @@ const router = useRouter();
     setSelectedEquipment((prev) =>
       prev.includes(equipment)
         ? prev.filter((e) => e !== equipment)
-        : [...prev, equipment]
+        : [...prev, equipment],
     );
   };
 
@@ -78,15 +80,14 @@ const router = useRouter();
     const matchesMuscleGroups =
       selectedMuscleGroups.length === 0 ||
       selectedMuscleGroups.every((group) => {
-        return exercise.muscle_groups?.includes(group)
-      }
-      );
+        return exercise.muscle_groups?.includes(group);
+      });
 
     const matchesEquipment =
       selectedEquipment.length === 0 ||
       exercise.equipment_required === null ||
       selectedEquipment.some((equipment) =>
-        exercise.equipment_required?.includes(equipment)
+        exercise.equipment_required?.includes(equipment),
       );
 
     return matchesSearchQuery && matchesMuscleGroups && matchesEquipment;
@@ -95,15 +96,14 @@ const router = useRouter();
   useEffect(() => {
     const exerciseId = searchParams.get("exerciseId");
     const selectedFromUrl =
-      exerciseId &&
-      exercises.find((exercise) => exercise.id === exerciseId);
+      exerciseId && exercises.find((exercise) => exercise.id === exerciseId);
 
-      if (selectedFromUrl && selectedFromUrl !== selectedExercise) {
+    if (selectedFromUrl && selectedFromUrl !== selectedExercise) {
       setSelectedExercise(selectedFromUrl);
     } else if (!selectedFromUrl && filteredExercises.length > 0) {
       setSelectedExercise(exercises[0]);
     }
-}, []);
+  }, []);
 
   useEffect(() => {
     const currentId = searchParams.get("exerciseId");
@@ -113,13 +113,14 @@ const router = useRouter();
   }, [selectedExercise, searchParams, router]);
 
   useEffect(() => {
-    if(!previousFilteredExercises.current) {
-        previousFilteredExercises.current = filteredExercises;
-        return
+    if (!previousFilteredExercises.current) {
+      previousFilteredExercises.current = filteredExercises;
+      return;
     }
 
     if (
-        JSON.stringify(previousFilteredExercises.current) !== JSON.stringify(filteredExercises)
+      JSON.stringify(previousFilteredExercises.current) !==
+      JSON.stringify(filteredExercises)
     ) {
       if (filteredExercises.length > 0) {
         setSelectedExercise(filteredExercises[0]);
@@ -140,23 +141,26 @@ const router = useRouter();
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <button onClick={toggleModal}><FilterIcon /></button>
+        <button onClick={toggleModal}>
+          <FilterIcon />
+        </button>
       </div>
       <div className="overflow-y-auto h-[calc(100%-64px)] bg-gray-100 py-3 shadow-sm">
-        {filteredExercises.length > 0 ? (<div className="list flex flex-col gap-y-3 mx-auto items-center">
-          {filteredExercises.map((exercise) => (
-            <button
-              className={`flex flex-col bg-white justify-start text-left p-3 shadow-sm rounded w-[90%] hover:outline ${
-                selectedExercise?.id === exercise.id ? "outline outline-blue-500" : "hover:outline-blue-200"
-              }`}
-              key={exercise.id}
-              onClick={() => setSelectedExercise(exercise)} 
-            >
-              <p className="text-l font-bold">{exercise.name}</p>
-              <div className="flex flex-wrap gap-x-1 mt-2">
-                {exercise.muscle_groups
-                  ?.split(",")
-                  .map((group, idx) => (
+        {filteredExercises.length > 0 ? (
+          <div className="list flex flex-col gap-y-3 mx-auto items-center">
+            {filteredExercises.map((exercise) => (
+              <button
+                className={`flex flex-col bg-white justify-start text-left p-3 shadow-sm rounded w-[90%] hover:outline ${
+                  selectedExercise?.id === exercise.id
+                    ? "outline outline-blue-500"
+                    : "hover:outline-blue-200"
+                }`}
+                key={exercise.id}
+                onClick={() => setSelectedExercise(exercise)}
+              >
+                <p className="text-l font-bold">{exercise.name}</p>
+                <div className="flex flex-wrap gap-x-1 mt-2">
+                  {exercise.muscle_groups?.split(",").map((group, idx) => (
                     <p
                       className="text-sm border rounded p-1 px-2 lowercase"
                       key={idx}
@@ -164,54 +168,58 @@ const router = useRouter();
                       {group}
                     </p>
                   ))}
-              </div>
-            </button>
-          ))}
-        </div>) : (
-            <div className="text-center text-gray-500 py-10">
-                <p>No results found. Try adjusting your search or filters.</p>
-            </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center text-gray-500 py-10">
+            <p>No results found. Try adjusting your search or filters.</p>
+          </div>
         )}
       </div>
       {/* Filter Modal */}
-        {isModalOpen && (<Modal onClick={toggleModal}>
-            <h2 className="text-lg font-bold">Filter Options</h2>
-<h3 className="uppercase text-xs font-semibold mt-8">Muscle Groups</h3>
-<div className="grid grid-cols-2 gap-4 mt-4">
-{muscleGroupOptions.map((group) => (
-    <div key={group}>
-    <label>
-        <input
-        type="checkbox"
-        className="mr-2"
-        checked={selectedMuscleGroups.includes(group)}
-        onChange={() => handleMuscleGroupChange(group)}
-        />
-        {group}
-    </label>
-    </div>
-))}
-</div>
-<h3 className="uppercase text-xs font-semibold mt-8">Available Equipment</h3>
-<div className="grid grid-cols-2 gap-4 mt-4">
-    {equipmentOptions.map((equipment) => (
-        <div key={equipment}>
-            <label>
-                <input
-                type="checkbox"
-                className="mr-2"
-                checked={selectedEquipment.includes(equipment)}
-                onChange={() => handleEquipmentChange(equipment)}
-                />
-                {equipment}
-            </label>
-        </div>
-     ))}
-</div>
-        </Modal>)}
+      {isModalOpen && (
+        <Modal onClick={toggleModal}>
+          <h2 className="text-lg font-bold">Filter Options</h2>
+          <h3 className="uppercase text-xs font-semibold mt-8">
+            Muscle Groups
+          </h3>
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            {muscleGroupOptions.map((group) => (
+              <div key={group}>
+                <label>
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={selectedMuscleGroups.includes(group)}
+                    onChange={() => handleMuscleGroupChange(group)}
+                  />
+                  {group}
+                </label>
+              </div>
+            ))}
+          </div>
+          <h3 className="uppercase text-xs font-semibold mt-8">
+            Available Equipment
+          </h3>
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            {equipmentOptions.map((equipment) => (
+              <div key={equipment}>
+                <label>
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={selectedEquipment.includes(equipment)}
+                    onChange={() => handleEquipmentChange(equipment)}
+                  />
+                  {equipment}
+                </label>
+              </div>
+            ))}
+          </div>
+        </Modal>
+      )}
     </>
   );
 }
-
-
-

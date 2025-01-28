@@ -4,8 +4,8 @@ import "./globals.css";
 
 const inter = Inter({
   variable: "--inter",
-  subsets: ['latin'], 
-  display: 'swap', 
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -18,21 +18,16 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} antialiased h-screen`}
-      >
+      <body className={`${inter.variable} antialiased h-screen`}>
         <div className="w-full h-screen overflow-y-hidden">
-          <nav className="w-full h-16 border-b-2 shadow-sm flex items-center p-4"><p className="text-l font-bold">Exercise Explorer</p></nav>
+          <nav className="w-full h-16 border-b-2 shadow-sm flex items-center p-4">
+            <p className="text-l font-bold">Exercise Explorer</p>
+          </nav>
           {children}
         </div>
       </body>
     </html>
   );
-
-
 }
-
-

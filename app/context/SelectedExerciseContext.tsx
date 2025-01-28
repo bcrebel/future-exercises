@@ -8,13 +8,23 @@ interface SelectedExerciseContextType {
   setSelectedExercise: (exercise: Exercise | null) => void;
 }
 
-const SelectedExerciseContext = createContext<SelectedExerciseContextType | undefined>(undefined);
+const SelectedExerciseContext = createContext<
+  SelectedExerciseContextType | undefined
+>(undefined);
 
-export const SelectedExerciseProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+export const SelectedExerciseProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
+    null,
+  );
 
   return (
-    <SelectedExerciseContext.Provider value={{ selectedExercise, setSelectedExercise }}>
+    <SelectedExerciseContext.Provider
+      value={{ selectedExercise, setSelectedExercise }}
+    >
       {children}
     </SelectedExerciseContext.Provider>
   );
@@ -23,7 +33,9 @@ export const SelectedExerciseProvider = ({ children }: { children: ReactNode }) 
 export const useSelectedExercise = () => {
   const context = useContext(SelectedExerciseContext);
   if (!context) {
-    throw new Error("useSelectedExercise must be used within a SelectedExerciseProvider");
+    throw new Error(
+      "useSelectedExercise must be used within a SelectedExerciseProvider",
+    );
   }
   return context;
 };

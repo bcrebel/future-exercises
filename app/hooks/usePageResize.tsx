@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import throttle from "lodash.throttle";
 
 function usePageResize(): boolean {
   const [isMobile, setIsMobile] = useState<boolean>(() => {
-    if (typeof window === 'undefined') {
-      return false; 
+    if (typeof window === "undefined") {
+      return false;
     }
     return window.innerWidth < 1024;
   });
-  
+
   useEffect(() => {
     const handleResize = throttle(() => {
       setIsMobile(window.innerWidth < 1024);
