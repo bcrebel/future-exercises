@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useEffect, } from 'react';
+import React, { useState, useEffect, } from 'react';
 import { useSelectedExercise } from '@/app/context/SelectedExerciseContext';
 import usePageResize from '../hooks/usePageResize';
 import { Exercise } from '../types';
@@ -15,8 +15,6 @@ const MobilePreview = ({ exercise, onClick }: {exercise: Exercise, onClick: () =
         </div>}
     </div>
 }
-
-
 
 const DetailViewScreen = function({fullscreen, exercise, back }: {fullscreen: boolean, exercise: Exercise, back?: () => void}) {
     const [difficulty, setDifficulty] = useState(null)

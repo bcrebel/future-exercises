@@ -3,12 +3,6 @@ import List from '@/app/components/List';
 import DetailView from '@/app/components/DetailView';
 import { SelectedExerciseProvider } from "@/app/context/SelectedExerciseContext";
 
-
-
-interface HomeProps {
-  exercises: Exercise[];
-}
-
 async function fetchExercises() {
   const res = await fetch(" https://candidate.staging.future.co/sandbox/api/exercises", { cache: "no-store" }); 
   if (!res.ok) {
@@ -18,7 +12,7 @@ async function fetchExercises() {
 }
 
 export default async function Page() {
-  const exercises = await fetchExercises();
+  const exercises: Exercise[] = await fetchExercises();
 
   return (
     <div className="flex flex-col-reverse lg:flex-row h-[calc(100%-64px)] w-full">
