@@ -155,7 +155,7 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
       </div>
       <div
         ref={parentRef}
-        className="overflow-y-auto h-[calc(100%-64px)] bg-gray-100 py-3 shadow-sm"
+        className="overflow-y-auto h-[calc(100%-64px)] bg-gray-100 shadow-sm"
       >
         {filteredExercises.length > 0 ? (
           <div
@@ -166,29 +166,25 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
           >
             {rowVirtualizer.getVirtualItems().map((virtualRow: VirtualItem) => {
               const exercise = filteredExercises[virtualRow.index];
+
               return (
                 <div
                   key={exercise.id}
-                  ref={virtualRow.measureElement}
+                  ref={rowVirtualizer.measureElement}  
+                  data-index={virtualRow.index}              
                   style={{
                     position: "absolute",
                     top: 0,
                     left: 0,
                     transform: `translateY(${virtualRow.start}px)`,
-                    width: "90%",
-                    marginLeft: '5%',
-                    marginRight: '5%',
-                    height: "100px",
-                    marginBottom: "10px", 
+                    width: "100%",
                   }}
-                  className={`flex flex-col bg-white justify-start text-left p-3 shadow-sm rounded w-[90%] hover:outline ${
-                    selectedExercise?.id === exercise.id
-                      ? "outline outline-blue-500"
-                      : "hover:outline-blue-200"
+                  className={`flex flex-col justify-start text-left p-3 shadow-sm border-t-[1px] hover:bg-gray-50 ${
+                    selectedExercise?.id === exercise.id ? 'bg-gray-100' : 'bg-white'
                   }`}
                   onClick={() => setSelectedExercise(exercise)}
                 >
-                  <p className="text-l font-bold">{exercise.name}</p>
+                    <p className="text-l font-bold">{exercise.name}</p>
                   <div className="flex flex-wrap gap-x-1 mt-2">
                     {exercise.muscle_groups?.split(",").map((group, idx) => (
                       <p
@@ -199,7 +195,8 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
                       </p>
                     ))}
                   </div>
-                </div>
+                    </div>
+       
               );
             })}
           </div>

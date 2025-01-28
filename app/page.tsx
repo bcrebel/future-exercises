@@ -20,7 +20,7 @@ export default async function Page() {
   return (
     <div className="flex flex-col-reverse lg:flex-row h-[calc(100%-64px)] w-full">
       <SelectedExerciseProvider>
-        <div className="left-pane w-full h-2/3 sm:h-1/2 lg:h-full lg:w-[400px] lg:shrink-0 2xl:w-1/4">
+        <div className="left-pane w-full h-2/3 sm:h-1/2 lg:h-full lg:w-[400px] lg:shrink-0 lg:border-r-[1px] border-gray-300 2xl:w-1/4">
           <List exercises={exercises} />
         </div>
         <div className="right-pane grow h-1/3 sm:h-1/2 lg:h-full">
