@@ -4,6 +4,7 @@ import { Exercise } from "@/app/types";
 import { useSelectedExercise } from "@/app/context/SelectedExerciseContext";
 import { useSearchParams, useRouter } from "next/navigation"; 
 import FilterIcon from '@/app/components/FilterIcon';
+import Modal from '@/app/components/Modal'
 
 export default function List({ exercises }: { exercises: Exercise[] }) {
 const router = useRouter();
@@ -173,52 +174,44 @@ const router = useRouter();
         )}
       </div>
       {/* Filter Modal */}
-        {isModalOpen && (<div role="dialog">
-            <div className="scrim top-0 fixed w-full h-full bg-black bg-opacity-50 z-10"/>
-            <div className="absolute top-0 bottom-0 flex items-end sm:justify-center sm:items-center w-full h-full z-20">
-                <div className="overflow-scroll relative bg-white w-full h-[90%] sm:w-2/3 sm:h-3/4 lg:w-1/2 p-8 rounded-md shadow-lg ">
-                    <button
-                       onClick={toggleModal}
-                        className="sticky text-right w-full right-0 top-0"
-                    >
-                        Close
-                    </button>
-                    <h2 className="text-lg font-bold">Filter Options</h2>
-                    <h3 className="uppercase text-xs font-semibold mt-8">Muscle Groups</h3>
-                    <div className="grid grid-cols-2 gap-4 mt-4">
-                    {muscleGroupOptions.map((group) => (
-                        <div key={group}>
-                        <label>
-                            <input
-                            type="checkbox"
-                            className="mr-2"
-                            checked={selectedMuscleGroups.includes(group)}
-                            onChange={() => handleMuscleGroupChange(group)}
-                            />
-                            {group}
-                        </label>
-                        </div>
-                    ))}
-                    </div>
-                    <h3 className="uppercase text-xs font-semibold mt-8">Available Equipment</h3>
-                    <div className="grid grid-cols-2 gap-4 mt-4">
-                        {equipmentOptions.map((equipment) => (
-                            <div key={equipment}>
-                                <label>
-                                    <input
-                                    type="checkbox"
-                                    className="mr-2"
-                                    checked={selectedEquipment.includes(equipment)}
-                                    onChange={() => handleEquipmentChange(equipment)}
-                                    />
-                                    {equipment}
-                                </label>
-                            </div>
-                         ))}
-                    </div>
-                </div>
-            </div>
-        </div>)}
+        {isModalOpen && (<Modal onClick={toggleModal}>
+            <h2 className="text-lg font-bold">Filter Options</h2>
+<h3 className="uppercase text-xs font-semibold mt-8">Muscle Groups</h3>
+<div className="grid grid-cols-2 gap-4 mt-4">
+{muscleGroupOptions.map((group) => (
+    <div key={group}>
+    <label>
+        <input
+        type="checkbox"
+        className="mr-2"
+        checked={selectedMuscleGroups.includes(group)}
+        onChange={() => handleMuscleGroupChange(group)}
+        />
+        {group}
+    </label>
+    </div>
+))}
+</div>
+<h3 className="uppercase text-xs font-semibold mt-8">Available Equipment</h3>
+<div className="grid grid-cols-2 gap-4 mt-4">
+    {equipmentOptions.map((equipment) => (
+        <div key={equipment}>
+            <label>
+                <input
+                type="checkbox"
+                className="mr-2"
+                checked={selectedEquipment.includes(equipment)}
+                onChange={() => handleEquipmentChange(equipment)}
+                />
+                {equipment}
+            </label>
+        </div>
+     ))}
+</div>
+        </Modal>)}
     </>
   );
 }
+
+
+
