@@ -1,12 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Exercise } from "@/app/types";
-
-interface SelectedExerciseContextType {
-  selectedExercise: Exercise | null;
-  setSelectedExercise: (exercise: Exercise | null) => void;
-}
+import { Exercise, SelectedExerciseContextType } from "@/app/types";
 
 const SelectedExerciseContext = createContext<
   SelectedExerciseContextType | undefined

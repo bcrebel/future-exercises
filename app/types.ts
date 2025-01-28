@@ -16,3 +16,8 @@ export interface Exercise {
     url?: string;
   };
 }
+
+export interface SelectedExerciseContextType {
+  selectedExercise: Exercise | null;
+  setSelectedExercise: (exercise: Exercise | null) => void;
+}
