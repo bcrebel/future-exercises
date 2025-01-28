@@ -134,7 +134,7 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
 
   return (
     <>
-      <div className="flex gap-x-2 py-3 mx-auto w-[90%]">
+      <div className="flex gap-x-2 py-3 px-5 w-full border-b-slate-300 border-b-[1px]">
         <input
           placeholder="Search"
           className="border rounded grow h-10 pl-2"
