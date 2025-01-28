@@ -144,10 +144,10 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
     useVirtualizer({
       count: filteredExercises.length,
       getScrollElement: () => parentRef.current,
-      estimateSize: () => 110,
+      estimateSize: () => 100,
     });
 
-  return (
+    return (
     <>
       <div className="flex gap-x-2 p-3 mx-auto w-full border-b-[1px] border-gray-300">
         <input
@@ -162,9 +162,13 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
       </div>
       <div
         ref={parentRef}
-        className="overflow-y-auto h-[calc(100%-64px)] bg-gray-100 shadow-sm"
+        className="relative overflow-y-auto h-[calc(100%-64px)] bg-gray-100 shadow-sm"
       >
+
         {filteredExercises.length > 0 ? (
+            <>
+                              <p className="text-center w-full absolute mt-3">Loading...</p>
+
           <div
             style={{
               height: `${rowVirtualizer.getTotalSize()}px`,
@@ -173,7 +177,6 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
           >
             {rowVirtualizer.getVirtualItems().map((virtualRow: VirtualItem) => {
               const exercise = filteredExercises[virtualRow.index];
-
               return (
                 <div
                   key={exercise.id}
@@ -185,6 +188,7 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
                     left: 0,
                     transform: `translateY(${virtualRow.start}px)`,
                     width: "100%",
+                    height: `90px`
                   }}
                   className={`flex flex-col justify-start text-left p-3 shadow-sm border-t-[1px] hover:bg-gray-50 ${
                     selectedExercise?.id === exercise.id
@@ -208,7 +212,7 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
               );
             })}
           </div>
-        ) : (
+        </>) : (
           <div className="text-center text-gray-500 py-10">
             <p>No results found. Try adjusting your search or filters.</p>
           </div>
