@@ -37,6 +37,7 @@ export default function ExerciseVirtualizer({
           position: "relative",
         }}
       >
+        <p className="absolute w-full text-center mt-3">Loading...</p>
         <div
           style={{
             position: "absolute",
