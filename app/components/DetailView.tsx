@@ -57,6 +57,8 @@ const DetailViewScreen = function ({
     }
 
     fetchDifficulty();
+
+    return () => setDifficulty(null)
   }, [exercise.id]);
 
   return (
@@ -81,7 +83,7 @@ const DetailViewScreen = function ({
       <div className="p-5 overflow-y-auto">
         <h2 className="text-3xl font-bold my-3">{exercise.name}</h2>
         {!difficulty ? (
-          <p>Loading difficulty</p>
+          <p>Loading difficulty...</p>
         ) : (
           <p>
             <span className="font-bold">Difficulty: </span>

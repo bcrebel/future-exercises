@@ -1,21 +1,21 @@
 "use client";
+
 import React, { useState, useEffect, useRef } from "react";
+import { useVirtualizer, Virtualizer, VirtualItem } from "@tanstack/react-virtual";
 import { Exercise } from "@/app/types";
 import { useSelectedExercise } from "@/app/context/SelectedExerciseContext";
 import { useSearchParams, useRouter } from "next/navigation";
 import FilterIcon from "@/app/components/FilterIcon";
 import Modal from "@/app/components/Modal";
 
-export default function List({ exercises }: { exercises: Exercise[] }) {
+export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { selectedExercise, setSelectedExercise } = useSelectedExercise();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<string[]>(
-    [],
-  );
+  const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<string[]>([]);
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
   const previousFilteredExercises = useRef<Exercise[] | null>(null);
 
@@ -60,7 +60,7 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
 
   const handleMuscleGroupChange = (group: string) => {
     setSelectedMuscleGroups((prev) =>
-      prev.includes(group) ? prev.filter((g) => g !== group) : [...prev, group],
+      prev.includes(group) ? prev.filter((g) => g !== group) : [...prev, group]
     );
   };
 
@@ -68,7 +68,7 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
     setSelectedEquipment((prev) =>
       prev.includes(equipment)
         ? prev.filter((e) => e !== equipment)
-        : [...prev, equipment],
+        : [...prev, equipment]
     );
   };
 
@@ -87,7 +87,7 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
       selectedEquipment.length === 0 ||
       exercise.equipment_required === null ||
       selectedEquipment.some((equipment) =>
-        exercise.equipment_required?.includes(equipment),
+        exercise.equipment_required?.includes(equipment)
       );
 
     return matchesSearchQuery && matchesMuscleGroups && matchesEquipment;
@@ -132,9 +132,17 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
     previousFilteredExercises.current = filteredExercises;
   }, [filteredExercises]);
 
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  const rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement> = useVirtualizer({
+    count: filteredExercises.length, 
+    getScrollElement: () => parentRef.current, 
+    estimateSize: () => 110, 
+  });
+
   return (
     <>
-      <div className="flex gap-x-2 py-3 px-5 w-full border-b-slate-300 border-b-[1px]">
+      <div className="flex gap-x-2 p-3 mx-auto w-full border-b-[1px] border-gray-300">
         <input
           placeholder="Search"
           className="border rounded grow h-10 pl-2"
@@ -145,32 +153,55 @@ export default function List({ exercises }: { exercises: Exercise[] }) {
           <FilterIcon />
         </button>
       </div>
-      <div className="overflow-y-auto h-[calc(100%-64px)] bg-gray-100 py-3 shadow-sm">
+      <div
+        ref={parentRef}
+        className="overflow-y-auto h-[calc(100%-64px)] bg-gray-100 py-3 shadow-sm"
+      >
         {filteredExercises.length > 0 ? (
-          <div className="list flex flex-col gap-y-3 mx-auto items-center">
-            {filteredExercises.map((exercise) => (
-              <button
-                className={`flex flex-col bg-white justify-start text-left p-3 shadow-sm rounded w-[90%] hover:outline ${
-                  selectedExercise?.id === exercise.id
-                    ? "outline outline-blue-500"
-                    : "hover:outline-blue-200"
-                }`}
-                key={exercise.id}
-                onClick={() => setSelectedExercise(exercise)}
-              >
-                <p className="text-l font-bold">{exercise.name}</p>
-                <div className="flex flex-wrap gap-x-1 mt-2">
-                  {exercise.muscle_groups?.split(",").map((group, idx) => (
-                    <p
-                      className="text-sm border rounded p-1 px-2 lowercase"
-                      key={idx}
-                    >
-                      {group}
-                    </p>
-                  ))}
+          <div
+            style={{
+              height: `${rowVirtualizer.getTotalSize()}px`, 
+              position: "relative",
+            }}
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualRow: VirtualItem) => {
+              const exercise = filteredExercises[virtualRow.index];
+              return (
+                <div
+                  key={exercise.id}
+                  ref={virtualRow.measureElement}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    transform: `translateY(${virtualRow.start}px)`,
+                    width: "90%",
+                    marginLeft: '5%',
+                    marginRight: '5%',
+                    height: "100px",
+                    marginBottom: "10px", 
+                  }}
+                  className={`flex flex-col bg-white justify-start text-left p-3 shadow-sm rounded w-[90%] hover:outline ${
+                    selectedExercise?.id === exercise.id
+                      ? "outline outline-blue-500"
+                      : "hover:outline-blue-200"
+                  }`}
+                  onClick={() => setSelectedExercise(exercise)}
+                >
+                  <p className="text-l font-bold">{exercise.name}</p>
+                  <div className="flex flex-wrap gap-x-1 mt-2">
+                    {exercise.muscle_groups?.split(",").map((group, idx) => (
+                      <p
+                        className="text-sm border rounded p-1 px-2 lowercase"
+                        key={idx}
+                      >
+                        {group}
+                      </p>
+                    ))}
+                  </div>
                 </div>
-              </button>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="text-center text-gray-500 py-10">
