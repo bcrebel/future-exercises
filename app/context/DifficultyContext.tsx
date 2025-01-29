@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export type Difficulty = {
@@ -8,13 +8,19 @@ export type Difficulty = {
 
 type DifficultyContextType = {
   difficultyCache: Map<string, Difficulty> | null;
-  setDifficultyCache: React.Dispatch<React.SetStateAction<Map<string, Difficulty>>>;
+  setDifficultyCache: React.Dispatch<
+    React.SetStateAction<Map<string, Difficulty>>
+  >;
 };
 
-export const DifficultyContext = createContext<DifficultyContextType | null>(null);
+export const DifficultyContext = createContext<DifficultyContextType | null>(
+  null,
+);
 
 const DifficultyProvider = ({ children }: { children: ReactNode }) => {
-  const [difficultyCache, setDifficultyCache] = useState(new Map<string, Difficulty>(null));
+  const [difficultyCache, setDifficultyCache] = useState(
+    new Map<string, Difficulty>(null),
+  );
 
   return (
     <DifficultyContext.Provider value={{ difficultyCache, setDifficultyCache }}>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useContext } from "react";
 import { useSelectedExercise } from "@/app/context/SelectedExerciseContext";
-import { DifficultyContext, Difficulty } from '@/app/context/DifficultyContext';
+import { DifficultyContext, Difficulty } from "@/app/context/DifficultyContext";
 import usePageResize from "../hooks/usePageResize";
 import { Exercise } from "../types";
 import { capitalizeWords } from "../utils";
@@ -45,15 +45,16 @@ const DetailViewScreen = function ({
   exercise: Exercise;
   back?: () => void;
 }) {
-    const { difficultyCache, setDifficultyCache } = useContext(DifficultyContext)!;
+  const { difficultyCache, setDifficultyCache } =
+    useContext(DifficultyContext)!;
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
 
   useEffect(() => {
-    setDifficulty(null)
+    setDifficulty(null);
     if (difficultyCache && difficultyCache.has(exercise.id)) {
-        setDifficulty(difficultyCache.get(exercise.id) ?? null);
-        return;
-      }
+      setDifficulty(difficultyCache.get(exercise.id) ?? null);
+      return;
+    }
 
     async function fetchDifficulty() {
       const response = await fetch(`/api/exercises/${exercise.id}/predictions`);
@@ -61,12 +62,12 @@ const DetailViewScreen = function ({
         throw new Error("Failed to fetch exercise difficulty");
       }
       const { skill_level } = await response.json();
-   setDifficultyCache(prevCache => {
-      const newCache = new Map<string, Difficulty>(prevCache);
-      newCache.set(exercise.id, skill_level as Difficulty);
-      return newCache;
-    });
-          setDifficulty(skill_level);
+      setDifficultyCache((prevCache) => {
+        const newCache = new Map<string, Difficulty>(prevCache);
+        newCache.set(exercise.id, skill_level as Difficulty);
+        return newCache;
+      });
+      setDifficulty(skill_level);
     }
 
     fetchDifficulty();
