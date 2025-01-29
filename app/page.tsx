@@ -2,6 +2,7 @@ import { Exercise } from "@/app/types";
 import List from "@/app/components/List";
 import DetailView from "@/app/components/DetailView";
 import { SelectedExerciseProvider } from "@/app/context/SelectedExerciseContext";
+import { DifficultyProvider } from "./context/DifficultyContext";
 
 async function fetchExercises() {
   const res = await fetch(
@@ -24,7 +25,9 @@ export default async function Page() {
           <List exercises={exercises} />
         </div>
         <div className="right-pane grow h-1/3 sm:h-1/2 lg:h-full">
-          <DetailView />
+          <DifficultyProvider>
+            <DetailView />
+          </DifficultyProvider>
         </div>
       </SelectedExerciseProvider>
     </div>
