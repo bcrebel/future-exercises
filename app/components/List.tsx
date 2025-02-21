@@ -19,6 +19,7 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
     [],
   );
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
+  const [filteredExercises, setFilteredExercises] = useState(exercises)
   const previousFilteredExercises = useRef<Exercise[] | null>(null);
 
   const muscleGroupOptions = [
@@ -74,7 +75,7 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
     );
   };
 
-  const filteredExercises = exercises.filter((exercise) => {
+  const filterExercises = (exercises: Exercise[]) => exercises.filter((exercise) => {
     const matchesSearchQuery = exercise.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
@@ -98,10 +99,14 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
   useEffect(() => {
     const exerciseId = searchParams.get("exerciseId");
     const selectedFromUrl =
-      exerciseId && exercises.find((exercise) => exercise.id === exerciseId);
+      exerciseId && exercises.findIndex((exercise) => exercise.id === exerciseId);
 
-    if (selectedFromUrl && selectedFromUrl !== selectedExercise) {
-      setSelectedExercise(selectedFromUrl);
+    if (selectedFromUrl) {
+      setSelectedExercise(filteredExercises[selectedFromUrl]);
+      setFilteredExercises((prev) => {
+        prev.unshift(...prev.splice(selectedFromUrl, 1))
+        return prev
+      })
     } else if (!selectedFromUrl && filteredExercises.length > 0) {
       setSelectedExercise(exercises[0]);
     }
@@ -115,6 +120,11 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
   }, [selectedExercise, searchParams, router]);
 
   useEffect(() => {
+    setFilteredExercises(filterExercises(exercises))
+  }, [selectedEquipment, selectedMuscleGroups, searchQuery])
+
+  useEffect(() => {
+    console.log(filteredExercises)
     if (!previousFilteredExercises.current) {
       previousFilteredExercises.current = filteredExercises;
       return;

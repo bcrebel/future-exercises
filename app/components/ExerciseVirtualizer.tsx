@@ -53,6 +53,7 @@ export default function ExerciseVirtualizer({
             return (
               <div
                 key={virtualRow.key}
+                id={exercise.id}
                 ref={virtualizer.measureElement}
                 data-index={virtualRow.index}
                 className={`flex flex-col justify-start text-left p-3 shadow-sm border-t-[1px] hover:bg-gray-50 ${
