@@ -113,7 +113,7 @@ export default function DetailView() {
 
   const toggleFullscreen = () => setFullscreen((prev) => !prev);
 
-  if (!selectedExercise) return <p className="text-center">Loading...</p>;
+  if (!selectedExercise) return <p className="text-center mt-3">Loading...</p>;
 
   if (isMobile) {
     return (

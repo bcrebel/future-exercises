@@ -2,6 +2,7 @@ import { Exercise } from "@/app/types";
 import List from "@/app/components/List";
 import DetailView from "@/app/components/DetailView";
 import { SelectedExerciseProvider } from "@/app/context/SelectedExerciseContext";
+import { cleanPunctuation } from '@/app/utils'
 
 async function fetchExercises() {
   const res = await fetch(
@@ -11,7 +12,20 @@ async function fetchExercises() {
   if (!res.ok) {
     throw new Error("Failed to fetch exercises");
   }
-  return res.json();
+  
+  const data: Exercise[] = await res.json();
+
+  return data.map((exercise) => {
+
+    if(exercise.description) {
+      return {
+        ...exercise,
+        description: cleanPunctuation(exercise.description),
+      }
+    }
+
+    return exercise
+})
 }
 
 export default async function Page() {
