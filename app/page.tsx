@@ -2,7 +2,6 @@ import { Exercise } from "@/app/types";
 import List from "@/app/components/List";
 import DetailView from "@/app/components/DetailView";
 import { SelectedExerciseProvider } from "@/app/context/SelectedExerciseContext";
-import { DifficultyProvider } from "./context/DifficultyContext";
 
 async function fetchExercises() {
   const res = await fetch(
@@ -17,7 +16,6 @@ async function fetchExercises() {
 
 export default async function Page() {
   const exercises: Exercise[] = await fetchExercises();
-
   return (
     <div className="flex flex-col-reverse lg:flex-row h-[calc(100%-64px)] w-full">
       <SelectedExerciseProvider>
@@ -25,9 +23,7 @@ export default async function Page() {
           <List exercises={exercises} />
         </div>
         <div className="right-pane grow h-1/3 sm:h-1/2 lg:h-full">
-          <DifficultyProvider>
-            <DetailView />
-          </DifficultyProvider>
+          <DetailView />
         </div>
       </SelectedExerciseProvider>
     </div>

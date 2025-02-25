@@ -124,7 +124,6 @@ export default function ExerciseList({ exercises }: { exercises: Exercise[] }) {
   }, [selectedEquipment, selectedMuscleGroups, searchQuery])
 
   useEffect(() => {
-    console.log(filteredExercises)
     if (!previousFilteredExercises.current) {
       previousFilteredExercises.current = filteredExercises;
       return;

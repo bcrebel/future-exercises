@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useContext } from "react";
 import { useSelectedExercise } from "@/app/context/SelectedExerciseContext";
-import { DifficultyContext, Difficulty } from "@/app/context/DifficultyContext";
+import useDifficulty from "@/app/hooks/useDifficulty";
 import usePageResize from "../hooks/usePageResize";
 import { Exercise } from "../types";
 import { capitalizeWords } from "../utils";
@@ -45,35 +45,7 @@ const DetailViewScreen = function ({
   exercise: Exercise;
   back?: () => void;
 }) {
-  const { difficultyCache, setDifficultyCache } =
-    useContext(DifficultyContext)!;
-  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
-
-  useEffect(() => {
-    setDifficulty(null);
-    if (difficultyCache && difficultyCache.has(exercise.id)) {
-      setDifficulty(difficultyCache.get(exercise.id) ?? null);
-      return;
-    }
-
-    async function fetchDifficulty() {
-      const response = await fetch(`/api/exercises/${exercise.id}/predictions`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch exercise difficulty");
-      }
-      const { skill_level } = await response.json();
-      setDifficultyCache((prevCache) => {
-        const newCache = new Map<string, Difficulty>(prevCache);
-        newCache.set(exercise.id, skill_level as Difficulty);
-        return newCache;
-      });
-      setDifficulty(skill_level);
-    }
-
-    fetchDifficulty();
-
-    return () => setDifficulty(null);
-  }, [exercise.id]);
+    const {difficulty, isLoading } = useDifficulty(exercise.id);
 
   return (
     <div
@@ -96,12 +68,12 @@ const DetailViewScreen = function ({
       </div>
       <div className="p-5 overflow-y-auto">
         <h2 className="text-3xl font-bold my-3">{exercise.name}</h2>
-        {!difficulty ? (
+        {isLoading ? (
           <p>Loading difficulty...</p>
         ) : (
-          <p>
+          difficulty && <p>
             <span className="font-bold">Difficulty: </span>
-            {`${difficulty["level"]}/${difficulty["max_level"]}`}
+            {`${difficulty?.level}/${difficulty?.max_level}`}
           </p>
         )}
         {exercise.synonyms && (
